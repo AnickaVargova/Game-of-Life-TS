@@ -2,23 +2,34 @@ import data from "./data";
 import updateSquare from "./utils/updateSquare";
 import updateBoard from "./utils/updateBoard";
 
-export const getBoard = (state:{boardInfo: boolean[][], tempo: number, isRunning: boolean}) => state.boardInfo;
-export const getTempo = (state:{boardInfo: boolean[][], tempo: number, isRunning: boolean}) => state.tempo;
-export const getIsRunning = (state:{boardInfo: boolean[][], tempo: number, isRunning: boolean}) => state.isRunning;
-export const updateSquareAction = (index:number, rowIndex:number) => ({
-  type: "UPDATE_SQUARE",
+type State = typeof data;
+
+export const getBoard = (state: State) => state.boardInfo;
+export const getTempo = (state: State) => state.tempo;
+export const getIsRunning = (state: State) => state.isRunning;
+export const updateSquareAction = (index: number, rowIndex: number) => ({
+  type: "UPDATE_SQUARE" as const,
   payload: { index, rowIndex },
 });
 export const setTempoAction = (value: string) => ({
-  type: "SET_TEMPO",
+  type: "SET_TEMPO" as const,
   payload: parseInt(value),
 });
 export const setRunningAction = (bool: boolean) => ({
-  type: "SET_RUNNING",
+  type: "SET_RUNNING" as const,
   payload: bool,
 });
+export const updateBoardAction = () => ({ type: "UPDATE_BOARD" as const });
+export const resetAction = () => ({ type: "RESET" as const });
 
-function reducer(state = data, action: {type:string, payload:any}) {
+type Actions =
+  | ReturnType<typeof updateSquareAction>
+  | ReturnType<typeof setTempoAction>
+  | ReturnType<typeof setRunningAction>
+  | ReturnType<typeof updateBoardAction>
+  | ReturnType<typeof resetAction>;
+
+function reducer(state = data, action: Actions): State {
   switch (action.type) {
     case "UPDATE_SQUARE":
       return {
