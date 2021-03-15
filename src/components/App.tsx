@@ -1,7 +1,7 @@
 import Board from "./Board";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import { setTempoAction, setRunningAction, getTempo } from "../reducer";
+import { setTempoAction, setRunningAction, getTempo, resetAction } from "../reducer";
 
 const Buttons = styled.div`
   display: flex;
@@ -43,7 +43,8 @@ const App = () => {
         <Button
           onClick={() => {
             dispatch(setRunningAction(false));
-            dispatch({ type: "RESET" });
+            dispatch(resetAction());
+           
           }}
         >
           Reset
