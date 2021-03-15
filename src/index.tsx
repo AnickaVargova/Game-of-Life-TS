@@ -2,9 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./components/App";
 import reportWebVitals from "./reportWebVitals";
-import { createStore, compose } from "redux";
+import { createStore, compose, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import reducer from "./reducer";
+import thunk from 'redux-thunk'; 
 
 declare global {
   interface Window {
@@ -16,8 +17,8 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = createStore(
   reducer,
-  composeEnhancers()
-  );
+  composeEnhancers(applyMiddleware(thunk)),
+   );
 
 ReactDOM.render(
   <React.StrictMode>
