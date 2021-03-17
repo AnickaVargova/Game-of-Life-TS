@@ -1,8 +1,7 @@
 import countItemNeighbours from "./countItemNeighbours";
 
 function updateBoard(oldArr:boolean[][]) {
-    //???
-  let arr = oldArr.map((row) => row.slice());
+    let arr = oldArr.map((row) => row.slice());
 
   for (let j = 0; j < arr.length; j++) {
     for (let i = 0; i < arr[j].length; i++) {

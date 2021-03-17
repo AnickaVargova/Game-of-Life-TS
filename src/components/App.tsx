@@ -44,8 +44,7 @@ const App = () => {
           onClick={() => {
             dispatch(setRunningAction(false));
             dispatch(resetAction());
-           
-          }}
+        }}
         >
           Reset
         </Button>
