@@ -2,7 +2,7 @@ import data from "./data";
 import updateSquare from "./utils/updateSquare";
 import updateBoard from "./utils/updateBoard";
 
-type State = typeof data;
+export type State = typeof data;
 
 export const getBoard = (state: State) => state.boardInfo;
 export const getTempo = (state: State) => state.tempo;
@@ -22,7 +22,7 @@ export const setRunningAction = (bool: boolean) => ({
 export const updateBoardAction = () => ({ type: "UPDATE_BOARD" as const });
 export const resetAction = () => ({ type: "RESET" as const });
 
-type Actions =
+export type Actions =
   | ReturnType<typeof updateSquareAction>
   | ReturnType<typeof setTempoAction>
   | ReturnType<typeof setRunningAction>
