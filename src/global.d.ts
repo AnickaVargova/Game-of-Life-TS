@@ -1,5 +1,6 @@
-import { Actions } from "./reducer";
+import { Actions, State } from "./reducer";
 
-declare module "react-redux" {
-  export function useDispatch(): (arg: Actions) => Promise<any>;
-}
+export type ThunkReturnType = (
+  dispatch: (act: Actions | (() => any)) => any,
+  getState: () => State
+) => any;
