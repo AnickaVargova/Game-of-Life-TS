@@ -1,8 +1,24 @@
 import data from "./data";
 import updateSquare from "./utils/updateSquare";
 import updateBoard from "./utils/updateBoard";
+import { ThunkReturnType } from "./global";
 
 export type State = typeof data;
+
+export const startGame = (): ThunkReturnType => (dispatch, getState) => {
+  dispatch(setRunningAction(true));
+  dispatch(setTempoAction(500));
+
+  const doStep = () => {
+    if (!getIsRunning(getState())) {
+      return;
+    }
+    dispatch(updateBoardAction());
+    setTimeout(doStep, getTempo(getState()));
+  };
+
+  setTimeout(doStep, getTempo(getState()));
+};
 
 export const getBoard = (state: State) => state.boardInfo;
 export const getTempo = (state: State) => state.tempo;
@@ -11,9 +27,9 @@ export const updateSquareAction = (index: number, rowIndex: number) => ({
   type: "UPDATE_SQUARE" as const,
   payload: { index, rowIndex },
 });
-export const setTempoAction = (value: string) => ({
+export const setTempoAction = (value: number) => ({
   type: "SET_TEMPO" as const,
-  payload: parseInt(value),
+  payload: value,
 });
 export const setRunningAction = (bool: boolean) => ({
   type: "SET_RUNNING" as const,
