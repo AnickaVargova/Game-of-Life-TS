@@ -1,7 +1,7 @@
 import Board from "./Board";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import { setTempoAction, setRunningAction, getTempo, resetAction } from "../reducer";
+import { setTempoAction, setRunningAction, getTempo, resetAction, startGame } from "../reducer";
 
 const Buttons = styled.div`
   display: flex;
@@ -38,7 +38,7 @@ const App = () => {
       <Board />
 
       <Buttons>
-        <Button onClick={() => dispatch(setRunningAction(true))}>Play</Button>
+        <Button onClick={() => dispatch(startGame())}>Play</Button>
         <Button onClick={() => dispatch(setRunningAction(false))}>Stop</Button>
         <Button
           onClick={() => {
@@ -54,7 +54,7 @@ const App = () => {
         <select
           value={tempo}
           onChange={(e) => {
-            dispatch(setTempoAction(e.target.value));
+            dispatch(setTempoAction(parseInt(e.target.value)));
           }}
         >
           <option value="50">0.05 s (very fast)</option>
