@@ -1,8 +1,8 @@
-import { useEffect } from "react";
+
 import Row from "./Row";
 import styled from "styled-components";
-import { useSelector, useDispatch } from "react-redux";
-import { getBoard, getTempo, getIsRunning, updateBoardAction } from "./../reducer";
+import { useSelector } from "react-redux";
+import { getBoard} from "./../reducer";
 
 const Table = styled.table`
   border: 1px solid black;
@@ -13,20 +13,7 @@ const Table = styled.table`
 
 const Board = () => {
   const boardInfo = useSelector(getBoard);
-  const isRunning = useSelector(getIsRunning);
-  const tempo = useSelector(getTempo);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    const interval = isRunning ? setInterval(() => dispatch(updateBoardAction()), tempo)
-      : null;
-    return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
-    };
-  }, [isRunning, tempo, dispatch]);
-  return (
+    return (
     <Table>
       <tbody>
         {boardInfo.map((row, rowIndex) => (
