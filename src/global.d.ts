@@ -1,6 +1,6 @@
-import { Actions, State } from "./reducer";
+import { Actions, GlobalState } from "./reducers/reducer";
 
 export type ThunkReturnType = (
   dispatch: (act: Actions | (() => any)) => any,
-  getState: () => State
+  getState: () => GlobalState
 ) => any;

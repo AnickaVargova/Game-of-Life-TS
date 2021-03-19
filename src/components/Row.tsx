@@ -1,6 +1,6 @@
 import Square from "./Square";
 import { useDispatch, useSelector } from "react-redux";
-import { updateSquareAction, getBoard } from "./../reducer";
+import { updateSquareAction, getBoard } from "../reducers/gameReducer";
 
 const Row = (props: {rowIndex: number} ) => {
   const dispatch = useDispatch();

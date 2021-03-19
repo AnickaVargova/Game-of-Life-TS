@@ -1,7 +1,8 @@
-import data from "./data";
-import updateSquare from "./utils/updateSquare";
-import updateBoard from "./utils/updateBoard";
-import { ThunkReturnType } from "./global";
+import data from "../data";
+import updateSquare from "../utils/updateSquare";
+import updateBoard from "../utils/updateBoard";
+import { ThunkReturnType } from "../global";
+import { Actions, GlobalState } from "./reducer";
 
 export type State = typeof data;
 
@@ -20,9 +21,9 @@ export const startGame = (): ThunkReturnType => (dispatch, getState) => {
   setTimeout(doStep, getTempo(getState()));
 };
 
-export const getBoard = (state: State) => state.boardInfo;
-export const getTempo = (state: State) => state.tempo;
-export const getIsRunning = (state: State) => state.isRunning;
+export const getBoard = (state: GlobalState) => state.game.boardInfo;
+export const getTempo = (state: GlobalState) => state.game.tempo;
+export const getIsRunning = (state: GlobalState) => state.game.isRunning;
 export const updateSquareAction = (index: number, rowIndex: number) => ({
   type: "UPDATE_SQUARE" as const,
   payload: { index, rowIndex },
@@ -38,14 +39,7 @@ export const setRunningAction = (bool: boolean) => ({
 export const updateBoardAction = () => ({ type: "UPDATE_BOARD" as const });
 export const resetAction = () => ({ type: "RESET" as const });
 
-export type Actions =
-  | ReturnType<typeof updateSquareAction>
-  | ReturnType<typeof setTempoAction>
-  | ReturnType<typeof setRunningAction>
-  | ReturnType<typeof updateBoardAction>
-  | ReturnType<typeof resetAction>;
-
-function reducer(state = data, action: Actions): State {
+export const gameReducer = (state = data, action: Actions): State => {
   switch (action.type) {
     case "UPDATE_SQUARE":
       return {
@@ -67,6 +61,4 @@ function reducer(state = data, action: Actions): State {
     default:
       return state;
   }
-}
-
-export default reducer;
+};

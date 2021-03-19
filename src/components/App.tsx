@@ -1,7 +1,8 @@
 import Board from "./Board";
 import styled from "styled-components";
+import Login from "./Login";
 import { useSelector, useDispatch } from "react-redux";
-import { setTempoAction, setRunningAction, getTempo, resetAction, startGame } from "../reducer";
+import { setTempoAction, setRunningAction, getTempo, resetAction, startGame } from "../reducers/gameReducer";
 
 const Buttons = styled.div`
   display: flex;
@@ -35,8 +36,8 @@ const App = () => {
 
   return (
     <div className="App">
+      <Login/>
       <Board />
-
       <Buttons>
         <Button onClick={() => dispatch(startGame())}>Play</Button>
         <Button onClick={() => dispatch(setRunningAction(false))}>Stop</Button>

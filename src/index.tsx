@@ -4,7 +4,8 @@ import App from "./components/App";
 import reportWebVitals from "./reportWebVitals";
 import { createStore, compose, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
-import reducer from "./reducer";
+import {reducers} from "./reducers/reducer";
+// import {gameReducer} from './reducers/gameReducer'
 import thunk from 'redux-thunk'; 
 
 declare global {
@@ -16,7 +17,8 @@ declare global {
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = createStore(
-  reducer,
+  reducers,
+  // gameReducer,
   composeEnhancers(applyMiddleware(thunk)),
    );
 
