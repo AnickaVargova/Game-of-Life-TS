@@ -1,6 +1,21 @@
-import { Actions, GlobalState } from "./reducers/reducer";
+import { GlobalActions, GlobalState } from "./reducers/reducer";
 
 export type ThunkReturnType = (
-  dispatch: (act: Actions | (() => any)) => any,
+  dispatch: (
+    act: GlobalActions | ThunkReturnType
+  ) => unknown | Promise<unknown>,
   getState: () => GlobalState
-) => any;
+) => unknown | Promise<unknown>;
+
+declare module "redux" {
+  export function combineReducers<T>(reducers: T): T;
+  interface StoreCreator {
+    (...args: any[]): any;
+  }
+}
+
+declare module "react-redux" {
+  export function useDispatch(): (
+    action: GlobalActions | ThunkReturnType
+  ) => unknown | Promise<unknown>;
+}

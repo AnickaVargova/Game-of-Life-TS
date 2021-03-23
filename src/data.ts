@@ -1,4 +1,6 @@
-export const name = "";
+import { config } from "./config";
+
+export const metadata = { name: "", password: "" };
 
 const data = {
   boardInfo: [
@@ -443,7 +445,7 @@ const data = {
       true,
     ],
   ],
-  tempo: 500,
+  tempo: config.DEFAULT_SPEED,
   isRunning: false,
 };
 

@@ -2,23 +2,18 @@ import { combineReducers } from "redux";
 import { loginReducer } from "./loginReducer";
 import { gameReducer } from "./gameReducer";
 
-import {
-  updateSquareAction,
-  setTempoAction,
-  setRunningAction,
-  updateBoardAction,
-  resetAction,
-} from "./gameReducer";
-
-import { setNameAction } from "./loginReducer";
-
-export type Actions =
-  | ReturnType<typeof updateSquareAction>
-  | ReturnType<typeof setTempoAction>
-  | ReturnType<typeof setRunningAction>
-  | ReturnType<typeof updateBoardAction>
-  | ReturnType<typeof resetAction>
-  | ReturnType<typeof setNameAction>;
+export type GetAllReduxActions<T> = T extends (
+  state: any,
+  actions: infer Actions,
+  ...args: any[]
+) => any
+  ? // omit empty objects like `{}`
+    keyof Actions extends []
+    ? never
+    : Actions
+  : T extends Record<string, infer Values>
+  ? GetAllReduxActions<Values>
+  : never;
 
 export type GetStateFromReducers<T> = T extends (...args: any[]) => infer Ret
   ? Ret
@@ -29,8 +24,11 @@ export type GetStateFromReducers<T> = T extends (...args: any[]) => infer Ret
   : T;
 
 export const reducers = combineReducers({
-  name: loginReducer,
+  metadata: combineReducers({ login: loginReducer }),
   game: gameReducer,
 });
 
 export type GlobalState = GetStateFromReducers<typeof reducers>;
+export type GlobalActions = GetAllReduxActions<typeof reducers>;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+type GlobalActionTypes = GlobalActions["type"];

@@ -5,8 +5,9 @@ import reportWebVitals from "./reportWebVitals";
 import { createStore, compose, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import {reducers} from "./reducers/reducer";
-// import {gameReducer} from './reducers/gameReducer'
 import thunk from 'redux-thunk'; 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import {config} from "./config";
 
 declare global {
   interface Window {
@@ -18,7 +19,6 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = createStore(
   reducers,
-  // gameReducer,
   composeEnhancers(applyMiddleware(thunk)),
    );
 

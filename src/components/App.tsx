@@ -4,6 +4,7 @@ import Login from "./Login";
 import { useSelector, useDispatch } from "react-redux";
 import { setTempoAction, setRunningAction, getTempo, resetAction, startGame } from "../reducers/gameReducer";
 
+
 const Buttons = styled.div`
   display: flex;
   justify-content: center;
@@ -30,9 +31,11 @@ const Tempo = styled.div`
     sans-serif;
 `;
 
+console.log(process.env);
 const App = () => {
   const tempo = useSelector(getTempo);
   const dispatch = useDispatch();
+
 
   return (
     <div className="App">

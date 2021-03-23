@@ -2,13 +2,13 @@ import data from "../data";
 import updateSquare from "../utils/updateSquare";
 import updateBoard from "../utils/updateBoard";
 import { ThunkReturnType } from "../global";
-import { Actions, GlobalState } from "./reducer";
+import { GlobalState } from "./reducer";
 
 export type State = typeof data;
 
 export const startGame = (): ThunkReturnType => (dispatch, getState) => {
   dispatch(setRunningAction(true));
-  dispatch(setTempoAction(500));
+  dispatch(setTempoAction(getTempo(getState())));
 
   const doStep = () => {
     if (!getIsRunning(getState())) {
@@ -39,7 +39,14 @@ export const setRunningAction = (bool: boolean) => ({
 export const updateBoardAction = () => ({ type: "UPDATE_BOARD" as const });
 export const resetAction = () => ({ type: "RESET" as const });
 
-export const gameReducer = (state = data, action: Actions): State => {
+type GameActions =
+  | ReturnType<typeof setTempoAction>
+  | ReturnType<typeof setRunningAction>
+  | ReturnType<typeof updateSquareAction>
+  | ReturnType<typeof updateBoardAction>
+  | ReturnType<typeof resetAction>;
+
+export const gameReducer = (state = data, action: GameActions): State => {
   switch (action.type) {
     case "UPDATE_SQUARE":
       return {

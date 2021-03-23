@@ -1,7 +1,7 @@
 import {useSelector, useDispatch} from 'react-redux';
 import {useState} from 'react';
 import styled from 'styled-components';
-import {getName, setNameAction} from "../reducers/loginReducer"
+import {getName, setLoginAction} from "../reducers/loginReducer"
 
 const LoginSection = styled.div`
 margin-top: 40px;
@@ -38,13 +38,24 @@ const Login = () => {
 
 const name = useSelector(getName);
 const dispatch = useDispatch();
-const [input, setInput] = useState('');
- 
+const [nameInput, setNameInput] = useState('');
+const [password, setPassword] = useState('');
+
+const handleClick = () => {
+    if(nameInput === ''|| password === ''){
+        alert ('Please fill in both fields.');
+        return;
+    }
+    dispatch(setLoginAction(nameInput, password)); setNameInput(''); setPassword('')
+}
+
 return (
     <LoginSection>
-        <Label>Enter your name:</Label>
-        <Input type = 'text' value = {input} onChange = {(e)=>setInput(e.target.value)} />
-        <Button onClick = {()=>{dispatch(setNameAction(input)); setInput('')}}>Submit</Button>
+        <Label>Name:</Label>
+        <Input type = 'text' value = {nameInput} onChange = {(e)=>setNameInput(e.target.value)} />
+        <Label>Password:</Label>
+        <Input type = 'text' value = {password} onChange = {(e)=>setPassword(e.target.value)}/>
+        <Button onClick = {handleClick}>Submit</Button>
         <Greeting>{name? `Hello ${name}!`: null}</Greeting>
     </LoginSection>
 )
