@@ -1,8 +1,7 @@
-
 import Row from "./Row";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
-import { getBoard} from "../reducers/gameReducer";
+import { DataContext } from "./App";
+import { useContext } from "react";
 
 const Table = styled.table`
   border: 1px solid black;
@@ -12,8 +11,8 @@ const Table = styled.table`
 `;
 
 const Board = () => {
-  const boardInfo = useSelector(getBoard);
-    return (
+  const boardInfo = useContext(DataContext).dataState;
+  return (
     <Table>
       <tbody>
         {boardInfo.map((row, rowIndex) => (

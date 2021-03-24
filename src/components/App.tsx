@@ -1,9 +1,10 @@
 import Board from "./Board";
 import styled from "styled-components";
 import Login from "./Login";
-import { useSelector, useDispatch } from "react-redux";
-import { setTempoAction, setRunningAction, getTempo, resetAction, startGame } from "../reducers/gameReducer";
-
+import React, { useState, useRef } from "react";
+import data, { metadata } from "../data";
+import setBoard from "../utils/updateBoard";
+import setSquare from "../utils/updateSquare";
 
 const Buttons = styled.div`
   display: flex;
@@ -31,43 +32,87 @@ const Tempo = styled.div`
     sans-serif;
 `;
 
-console.log(process.env);
-const App = () => {
-  const tempo = useSelector(getTempo);
-  const dispatch = useDispatch();
+type Context = ReturnType<typeof useDataContext>;
 
+export const useDataContext = () => {
+  const [dataState, setDataState] = useState(data.boardInfo);
+  const [tempo, setTempo] = useState(data.tempo);
+  const [running, setRunning] = useState(data.isRunning);
+  const [name, setName] = useState(metadata.name);
+  const [password, setPassword] = useState(metadata.password);
+
+  const updateBoard = () => setDataState((p) => setBoard(p));
+  const updateSquare = (index: number, rowIndex: number) =>
+    setDataState((p) => setSquare(p, index, rowIndex));
+
+  return {
+    dataState,
+    running,
+    tempo,
+    name,
+    password,
+    setName,
+    setPassword,
+    updateBoard,
+    updateSquare,
+    setRunning,
+    setDataState,
+    setTempo,
+  };
+};
+
+export const DataContext = React.createContext({} as Context);
+
+const App = () => {
+  const dataValue = useDataContext();
+  const runningRef = useRef({ running: false, tempo: 500 });
+  runningRef.current = { running: dataValue.running, tempo: dataValue.tempo };
+
+  const startGame = () => {
+    dataValue.setRunning(true);
+    const doStep = () => {
+      if (!runningRef.current.running) {
+        return;
+      }
+      dataValue.updateBoard();
+      setTimeout(doStep, runningRef.current.tempo);
+    };
+    setTimeout(doStep, runningRef.current.tempo);
+  };
 
   return (
     <div className="App">
-      <Login/>
-      <Board />
-      <Buttons>
-        <Button onClick={() => dispatch(startGame())}>Play</Button>
-        <Button onClick={() => dispatch(setRunningAction(false))}>Stop</Button>
-        <Button
-          onClick={() => {
-            dispatch(setRunningAction(false));
-            dispatch(resetAction());
-        }}
-        >
-          Reset
-        </Button>
-      </Buttons>
-      <Tempo>
-        <span>Change the speed: </span>
-        <select
-          value={tempo}
-          onChange={(e) => {
-            dispatch(setTempoAction(parseInt(e.target.value)));
-          }}
-        >
-          <option value="50">0.05 s (very fast)</option>
-          <option value="300">0.3 s</option>
-          <option value="500">0.5 s (medium)</option>
-          <option value="700">0.7 s</option>
-          <option value="2000">2 s (very slow)</option>
-        </select>
-      </Tempo>
+      <DataContext.Provider value={dataValue}>
+        <Login />
+        <Board />
+        <Buttons>
+          <Button onClick={startGame}>Play</Button>
+          <Button onClick={() => dataValue.setRunning(false)}>Stop</Button>
+          <Button
+            onClick={() => {
+              dataValue.setRunning(false);
+              dataValue.setDataState(data.boardInfo);
+            }}
+          >
+            Reset
+          </Button>
+        </Buttons>
+        <Tempo>
+          <span>Change the speed: </span>
+          <select
+            value={dataValue.tempo}
+            onChange={(e) => {
+              dataValue.setTempo(parseInt(e.target.value));
+            }}
+          >
+            <option value="50">0.05 s (very fast)</option>
+            <option value="300">0.3 s</option>
+            <option value="500">0.5 s (medium)</option>
+            <option value="700">0.7 s</option>
+            <option value="2000">2 s (very slow)</option>
+          </select>
+        </Tempo>
+      </DataContext.Provider>
     </div>
   );
 };
