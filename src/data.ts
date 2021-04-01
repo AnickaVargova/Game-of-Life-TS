@@ -447,6 +447,7 @@ const data = {
   ],
   tempo: config.DEFAULT_SPEED,
   isRunning: false,
+  msg: "",
 };
 
 export default data;
