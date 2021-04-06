@@ -35,13 +35,11 @@ const getStringFromEnvParser = (envName: string) => () => {
   if (!value || value === "") {
     throw new Error(`env variable: ${envName} is invalid`);
   }
-  console.log(value);
   return value;
 };
 
 const getNumberFromEnvParser = (envName: string) => () => {
   const value = parseFloat(process.env[envName] ?? "");
-  console.log(value);
   return value;
 };
 

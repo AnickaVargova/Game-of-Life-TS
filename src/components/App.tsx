@@ -2,16 +2,18 @@ import Board from "./Board";
 import styled from "styled-components";
 import Login from "./Login";
 import { useSelector, useDispatch } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { config } from "../config";
 
 import {
   setTempoAction,
   setRunningAction,
+  errorAction,
   getTempo,
   startGame,
   changeBoardSetting,
   getErrorMsg,
+  savePattern,
 } from "../reducers/gameReducer";
 
 const Setting = styled.div`
@@ -66,7 +68,18 @@ const App = () => {
   const tempo = useSelector(getTempo);
   const msg = useSelector(getErrorMsg);
   const dispatch = useDispatch();
-  const [pattern, setPattern] = useState("Example");
+  const [pattern, setPattern] = useState("example");
+  const [settings, setSettings] = useState([] as string[]);
+
+  useEffect(() => {
+    dispatch(changeBoardSetting(pattern));
+    fetch(`http://localhost:8080/`)
+      .then((response) => response.json())
+      .then((data) => setSettings(data))
+      .catch((error) =>
+        dispatch(errorAction("ERROR: Unable to fetch patterns."))
+      );
+  }, [pattern, dispatch]);
 
   return (
     <div className="App">
@@ -78,13 +91,13 @@ const App = () => {
             dispatch(changeBoardSetting(e.target.value));
             setPattern(e.target.value);
           }}
+          value={pattern}
         >
-          <option value="example">Example</option>
-          <option value="blinker">Blinker</option>
-          <option value="toad">Toad</option>
-          <option value="beacon">Beacon</option>
-          <option value="pentadecathlon">Pentadecathlon</option>
-          <option value="pulsar">Pulsar</option>
+          {settings.map((setting, index) => (
+            <option key={index} value={setting}>
+              {setting}
+            </option>
+          ))}
         </Select>
         <Message>{msg}</Message>
       </Setting>
@@ -101,11 +114,24 @@ const App = () => {
         >
           Reset
         </Button>
+        <Button
+          onClick={() => {
+            let newPattern = prompt("Type the name of your pattern:");
+            // @ts-expect-error
+            dispatch(savePattern(newPattern));
+            // @ts-expect-error
+            setSettings([...settings, newPattern]);
+            // @ts-expect-error
+            setPattern(newPattern);
+          }}
+        >
+          Save
+        </Button>
       </Buttons>
       <Tempo>
         <Label>Change the speed: </Label>
         <Select
-          value={tempo}
+          value={tempo ? tempo : config.DEFAULT_SPEED}
           onChange={(e) => {
             dispatch(setTempoAction(parseInt(e.target.value)));
           }}

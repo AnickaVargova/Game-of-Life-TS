@@ -1,14 +1,25 @@
-import data from "../data";
 import updateSquare from "../utils/updateSquare";
 import updateBoard from "../utils/updateBoard";
 import { ThunkReturnType } from "../global";
 import { GlobalState } from "./reducer";
+import { config } from "../config";
 
-export type State = typeof data;
+export type State = {
+  boardInfo: boolean[][];
+  tempo: number;
+  isRunning: boolean;
+  msg: string;
+};
 
 export const startGame = (): ThunkReturnType => (dispatch, getState) => {
+  const tempo = getTempo(getState());
   dispatch(setRunningAction(true));
-  dispatch(setTempoAction(getTempo(getState())));
+
+  if (tempo) {
+    dispatch(setTempoAction(tempo));
+  } else {
+    dispatch(setTempoAction(config.DEFAULT_SPEED));
+  }
 
   const doStep = () => {
     if (!getIsRunning(getState())) {
@@ -25,10 +36,33 @@ export const changeBoardSetting = (pattern: string): ThunkReturnType => (
   dispatch,
   getState
 ) => {
-  fetch(`http://localhost:8080/${pattern}`, { mode: "cors" })
-    .then((response) => response.json())
+  fetch(`http://localhost:8080/${pattern}`)
+    .then((response) => {
+      if (!response.ok) {
+        dispatch(errorAction("Unable to fetch data."));
+      } else {
+        return response.json();
+      }
+    })
     .then((data) => dispatch(fetchDataAction(data)))
-    .catch(() => dispatch(errorAction()));
+    .catch(() => {
+      dispatch(errorAction("ERROR: Unable to fetch data."));
+    });
+};
+
+export const savePattern = (pattern: string): ThunkReturnType => (
+  dispatch,
+  getState
+) => {
+  fetch(`http://localhost:8080/${pattern}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify([pattern, getState().game.boardInfo]),
+  }).catch(() => {
+    dispatch(errorAction("ERROR: Unable to save data."));
+  });
 };
 
 export const getBoard = (state: GlobalState) => state.game.boardInfo;
@@ -53,9 +87,9 @@ export const fetchDataAction = (data: boolean[][]) => ({
   type: "FETCH_DATA" as const,
   payload: data,
 });
-export const errorAction = () => ({
+export const errorAction = (msg: string) => ({
   type: "ERROR" as const,
-  msg: "Unfortunately this action wasn't successful.",
+  payload: msg,
 });
 
 type GameActions =
@@ -66,16 +100,14 @@ type GameActions =
   | ReturnType<typeof fetchDataAction>
   | ReturnType<typeof errorAction>;
 
-export const gameReducer = (state = data, action: GameActions) => {
+export const gameReducer = (state = {} as State, action: GameActions) => {
   switch (action.type) {
     case "UPDATE_SQUARE":
       return {
         ...state,
         boardInfo: updateSquare(
           state?.boardInfo,
-
           action.payload.index,
-
           action.payload.rowIndex
         ),
       };
@@ -87,8 +119,9 @@ export const gameReducer = (state = data, action: GameActions) => {
       return { ...state, tempo: action.payload };
     case "FETCH_DATA":
       return { ...state, boardInfo: action.payload };
+    //TODO: test error
     case "ERROR":
-      return { ...state, error: action.msg };
+      return { ...state, msg: action.payload };
     default:
       return state;
   }
