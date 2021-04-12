@@ -33,8 +33,7 @@ export const startGame = (): ThunkReturnType => (dispatch, getState) => {
 };
 
 export const changeBoardSetting = (pattern: string): ThunkReturnType => (
-  dispatch,
-  getState
+  dispatch
 ) => {
   fetch(`http://localhost:8080/${pattern}`)
     .then((response) => {
@@ -59,7 +58,7 @@ export const savePattern = (pattern: string): ThunkReturnType => (
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify([pattern, getState().game.boardInfo]),
+    body: JSON.stringify(getState().game.boardInfo),
   }).catch(() => {
     dispatch(errorAction("ERROR: Unable to save data."));
   });
@@ -119,7 +118,6 @@ export const gameReducer = (state = {} as State, action: GameActions) => {
       return { ...state, tempo: action.payload };
     case "FETCH_DATA":
       return { ...state, boardInfo: action.payload };
-    //TODO: test error
     case "ERROR":
       return { ...state, msg: action.payload };
     default:
