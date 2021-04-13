@@ -43,7 +43,9 @@ export const changeBoardSetting = (pattern: string): ThunkReturnType => (
         return response.json();
       }
     })
-    .then((data) => dispatch(fetchDataAction(data)))
+    .then((data) => {
+      dispatch(fetchDataAction(data));
+    })
     .catch(() => {
       dispatch(errorAction("ERROR: Unable to fetch data."));
     });

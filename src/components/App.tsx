@@ -8,7 +8,6 @@ import { config } from "../config";
 import {
   setTempoAction,
   setRunningAction,
-  errorAction,
   getTempo,
   startGame,
   changeBoardSetting,
@@ -69,16 +68,18 @@ const App = () => {
   const msg = useSelector(getErrorMsg);
   const dispatch = useDispatch();
   const [pattern, setPattern] = useState("example");
-  const [settings, setSettings] = useState([] as string[]);
+  const [settings, setSettings] = useState([
+    "example",
+    "blinker",
+    "toad",
+    "beacon",
+    "pentadecathlon",
+    "pulsar",
+    "random",
+  ]);
 
   useEffect(() => {
     dispatch(changeBoardSetting(pattern));
-    fetch(`http://localhost:8080/`)
-      .then((response) => response.json())
-      .then((data) => setSettings(data))
-      .catch((error) =>
-        dispatch(errorAction("ERROR: Unable to fetch patterns."))
-      );
   }, [pattern, dispatch]);
 
   return (
