@@ -11,8 +11,9 @@ import {
   getTempo,
   startGame,
   changeBoardSetting,
-  getErrorMsg,
+  getMsg,
   savePattern,
+  editPattern,
 } from "../reducers/gameReducer";
 
 const Setting = styled.div`
@@ -65,7 +66,7 @@ const Tempo = styled.div`
 
 const App = () => {
   const tempo = useSelector(getTempo);
-  const msg = useSelector(getErrorMsg);
+  const msg = useSelector(getMsg);
   const dispatch = useDispatch();
   const [pattern, setPattern] = useState("example");
   const [settings, setSettings] = useState([
@@ -80,6 +81,9 @@ const App = () => {
 
   useEffect(() => {
     dispatch(changeBoardSetting(pattern));
+    fetch("http://localhost:8080")
+      .then((response) => response.json())
+      .then((data) => setSettings(data));
   }, [pattern, dispatch]);
 
   return (
@@ -100,6 +104,7 @@ const App = () => {
             </option>
           ))}
         </Select>
+
         <Message>{msg}</Message>
       </Setting>
       <Board />
@@ -126,7 +131,14 @@ const App = () => {
             setPattern(newPattern);
           }}
         >
-          Save
+          Save new pattern
+        </Button>
+        <Button
+          onClick={() => {
+            dispatch(editPattern(pattern));
+          }}
+        >
+          Edit pattern
         </Button>
       </Buttons>
       <Tempo>

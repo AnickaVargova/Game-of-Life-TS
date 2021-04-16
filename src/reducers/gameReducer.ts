@@ -35,10 +35,11 @@ export const startGame = (): ThunkReturnType => (dispatch, getState) => {
 export const changeBoardSetting = (pattern: string): ThunkReturnType => (
   dispatch
 ) => {
+  dispatch(messageAction("Loading..."));
   fetch(`http://localhost:8080/${pattern}`)
     .then((response) => {
       if (!response.ok) {
-        dispatch(errorAction("Unable to fetch data."));
+        dispatch(messageAction("Unable to fetch data."));
       } else {
         return response.json();
       }
@@ -46,8 +47,9 @@ export const changeBoardSetting = (pattern: string): ThunkReturnType => (
     .then((data) => {
       dispatch(fetchDataAction(data));
     })
+    .then(() => dispatch(messageAction("")))
     .catch(() => {
-      dispatch(errorAction("ERROR: Unable to fetch data."));
+      dispatch(messageAction("ERROR: Unable to fetch data."));
     });
 };
 
@@ -61,15 +63,44 @@ export const savePattern = (pattern: string): ThunkReturnType => (
       "Content-Type": "application/json",
     },
     body: JSON.stringify(getState().game.boardInfo),
-  }).catch(() => {
-    dispatch(errorAction("ERROR: Unable to save data."));
-  });
+  })
+    .then((response) => {
+      if (!response.ok) {
+        dispatch(messageAction("ERROR: Pattern name is already in use."));
+      } else {
+        dispatch(messageAction("Your pattern has been saved."));
+      }
+    })
+    .catch(() => {
+      dispatch(messageAction("ERROR: Unable to save data."));
+    });
+};
+
+export const editPattern = (pattern: string): ThunkReturnType => (
+  dispatch,
+  getState
+) => {
+  fetch(`http://localhost:8080/${pattern}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(getState().game.boardInfo),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        dispatch(messageAction("ERROR: unable to save data"));
+      } else {
+        dispatch(messageAction("Your pattern has been successfully edited."));
+      }
+    })
+    .catch(() => {
+      dispatch(messageAction("ERROR: unable to save data"));
+    });
 };
 
 export const getBoard = (state: GlobalState) => state.game.boardInfo;
 export const getTempo = (state: GlobalState) => state.game.tempo;
 export const getIsRunning = (state: GlobalState) => state.game.isRunning;
-export const getErrorMsg = (state: GlobalState) => state.game.msg;
+export const getMsg = (state: GlobalState) => state.game.msg;
 export const updateSquareAction = (index: number, rowIndex: number) => ({
   type: "UPDATE_SQUARE" as const,
   payload: { index, rowIndex },
@@ -88,8 +119,8 @@ export const fetchDataAction = (data: boolean[][]) => ({
   type: "FETCH_DATA" as const,
   payload: data,
 });
-export const errorAction = (msg: string) => ({
-  type: "ERROR" as const,
+export const messageAction = (msg: string) => ({
+  type: "MESSAGE" as const,
   payload: msg,
 });
 
@@ -99,7 +130,7 @@ type GameActions =
   | ReturnType<typeof updateSquareAction>
   | ReturnType<typeof updateBoardAction>
   | ReturnType<typeof fetchDataAction>
-  | ReturnType<typeof errorAction>;
+  | ReturnType<typeof messageAction>;
 
 export const gameReducer = (state = {} as State, action: GameActions) => {
   switch (action.type) {
@@ -120,7 +151,7 @@ export const gameReducer = (state = {} as State, action: GameActions) => {
       return { ...state, tempo: action.payload };
     case "FETCH_DATA":
       return { ...state, boardInfo: action.payload };
-    case "ERROR":
+    case "MESSAGE":
       return { ...state, msg: action.payload };
     default:
       return state;
