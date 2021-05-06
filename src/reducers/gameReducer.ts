@@ -32,7 +32,7 @@ export const startGame = (): ThunkReturnType => (dispatch, getState) => {
   setTimeout(doStep, getTempo(getState()));
 };
 
-export const changeBoardSetting = (pattern: string): ThunkReturnType => (
+export const changeBoardSetting = (pattern: string|number): ThunkReturnType => (
   dispatch
 ) => {
   dispatch(messageAction("Loading..."));
@@ -94,6 +94,26 @@ export const editPattern = (pattern: string): ThunkReturnType => (
     })
     .catch(() => {
       dispatch(messageAction("ERROR: unable to save data"));
+    });
+};
+
+export const deletePattern = (pattern: string): ThunkReturnType => (
+  dispatch,
+  getState
+) => {
+  fetch(`http://localhost:8080/${pattern}`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        dispatch(messageAction("ERROR: unable to save data"));
+      } else {
+        dispatch(messageAction("The pattern has been deleted."));
+      }
+    })
+    .catch(() => {
+      dispatch(messageAction("ERROR: unable to delete"));
     });
 };
 

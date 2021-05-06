@@ -14,6 +14,7 @@ import {
   getMsg,
   savePattern,
   editPattern,
+  deletePattern,
 } from "../reducers/gameReducer";
 
 const Setting = styled.div`
@@ -68,19 +69,22 @@ const App = () => {
   const tempo = useSelector(getTempo);
   const msg = useSelector(getMsg);
   const dispatch = useDispatch();
-  const [pattern, setPattern] = useState("example");
+  const [pattern, setPattern] = useState("blinker");
   const [settings, setSettings] = useState([
-    "example",
+    // "example",
     "blinker",
-    "toad",
+    // "toad",
     "beacon",
     "pentadecathlon",
-    "pulsar",
+    // "pulsar",
     "random",
   ]);
 
   useEffect(() => {
-    dispatch(changeBoardSetting(pattern));
+    let setting = pattern;
+     // @ts-expect-error
+    if(setting === 'random'){setting=1}
+    dispatch(changeBoardSetting(setting));
     fetch("http://localhost:8080")
       .then((response) => response.json())
       .then((data) => setSettings(data));
@@ -93,7 +97,10 @@ const App = () => {
         <Label>Choose a pattern:</Label>
         <Select
           onChange={(e) => {
-            dispatch(changeBoardSetting(e.target.value));
+            let setting = e.target.value;
+            // @ts-expect-error
+            if(setting === 'random') {setting = 1}
+            dispatch(changeBoardSetting(setting));
             setPattern(e.target.value);
           }}
           value={pattern}
@@ -114,7 +121,10 @@ const App = () => {
         <Button
           onClick={() => {
             dispatch(setRunningAction(false));
-            dispatch(changeBoardSetting(pattern));
+            let setting = pattern;
+            // @ts-expect-error
+           if(setting === 'random'){setting=1}
+           dispatch(changeBoardSetting(setting));
             dispatch(setTempoAction(config.DEFAULT_SPEED));
           }}
         >
@@ -140,6 +150,13 @@ const App = () => {
         >
           Edit pattern
         </Button>
+        <Button
+          onClick={() => {
+            dispatch(deletePattern(pattern));
+          }}
+        >
+          Delete pattern
+        </Button>
       </Buttons>
       <Tempo>
         <Label>Change the speed: </Label>
@@ -159,5 +176,6 @@ const App = () => {
     </div>
   );
 };
+
 
 export default App;
