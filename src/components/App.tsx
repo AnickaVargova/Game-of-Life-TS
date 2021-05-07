@@ -1,9 +1,9 @@
-import Board from "./Board";
-import styled from "styled-components";
-import Login from "./Login";
-import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
-import { config } from "../config";
+import Board from './Board';
+import styled from 'styled-components';
+import Login from './Login';
+import { useSelector, useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { config } from '../config';
 
 import {
   setTempoAction,
@@ -15,7 +15,7 @@ import {
   savePattern,
   editPattern,
   deletePattern,
-} from "../reducers/gameReducer";
+} from '../reducers/gameReducer';
 
 const Setting = styled.div`
   text-align: center;
@@ -42,8 +42,8 @@ const Message = styled.p`
 const Buttons = styled.div`
   display: flex;
   justify-content: center;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
 `;
 
@@ -60,8 +60,8 @@ const Tempo = styled.div`
   text-align: center;
   margin-top: 20px;
   height: 20px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
 `;
 
@@ -69,23 +69,28 @@ const App = () => {
   const tempo = useSelector(getTempo);
   const msg = useSelector(getMsg);
   const dispatch = useDispatch();
-  const [pattern, setPattern] = useState("blinker");
+  const [pattern, setPattern] = useState('example');
   const [settings, setSettings] = useState([
-    // "example",
-    "blinker",
-    // "toad",
-    "beacon",
-    "pentadecathlon",
-    // "pulsar",
-    "random",
+    'example',
+    'blinker',
+    'toad',
+    'beacon',
+    'pentadecathlon',
+    'pulsar',
+    'random',
   ]);
 
   useEffect(() => {
     let setting = pattern;
-     // @ts-expect-error
-    if(setting === 'random'){setting=1}
+
+    if (setting === 'random') {
+      // @ts-expect-error
+      setting = 1;
+    }
+
     dispatch(changeBoardSetting(setting));
-    fetch("http://localhost:8080")
+
+    fetch('http://localhost:8080')
       .then((response) => response.json())
       .then((data) => setSettings(data));
   }, [pattern, dispatch]);
@@ -98,8 +103,10 @@ const App = () => {
         <Select
           onChange={(e) => {
             let setting = e.target.value;
-            // @ts-expect-error
-            if(setting === 'random') {setting = 1}
+            if (setting === 'random') {
+              // @ts-expect-error
+              setting = 1;
+            }
             dispatch(changeBoardSetting(setting));
             setPattern(e.target.value);
           }}
@@ -122,9 +129,12 @@ const App = () => {
           onClick={() => {
             dispatch(setRunningAction(false));
             let setting = pattern;
-            // @ts-expect-error
-           if(setting === 'random'){setting=1}
-           dispatch(changeBoardSetting(setting));
+            if (setting === 'random') {
+              // @ts-expect-error
+              setting = 1;
+            }
+
+            dispatch(changeBoardSetting(setting));
             dispatch(setTempoAction(config.DEFAULT_SPEED));
           }}
         >
@@ -132,7 +142,8 @@ const App = () => {
         </Button>
         <Button
           onClick={() => {
-            let newPattern = prompt("Type the name of your pattern:");
+            let newPattern = prompt('Type the name of your pattern:');
+            // const alphaExp = /^[a-zA-Z]+$/;
             // @ts-expect-error
             dispatch(savePattern(newPattern));
             // @ts-expect-error
@@ -176,6 +187,5 @@ const App = () => {
     </div>
   );
 };
-
 
 export default App;
