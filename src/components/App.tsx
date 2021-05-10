@@ -81,7 +81,7 @@ const App = () => {
   ]);
 
   useEffect(() => {
- 
+    console.log('rendering');
     let setting = pattern;
     if (setting === 'random') {
       // @ts-expect-error
@@ -162,6 +162,7 @@ const App = () => {
         <Button
           onClick={() => {
             dispatch(deletePattern(pattern));
+            setSettings(prevsettings=>prevsettings.filter(setting=>setting !== pattern))
           }}
         >
           Delete pattern
