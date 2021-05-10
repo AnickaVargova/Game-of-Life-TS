@@ -81,19 +81,17 @@ const App = () => {
   ]);
 
   useEffect(() => {
+ 
     let setting = pattern;
-
     if (setting === 'random') {
       // @ts-expect-error
       setting = 1;
     }
-
     dispatch(changeBoardSetting(setting));
-
     fetch('http://localhost:8080')
       .then((response) => response.json())
       .then((data) => setSettings(data));
-  }, [pattern, dispatch]);
+  }, []);
 
   return (
     <div className="App">
