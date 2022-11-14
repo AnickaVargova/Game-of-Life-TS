@@ -63,6 +63,10 @@ const Instructions = styled.div`
   line-height: 1.5;
 `;
 
+const Footer = styled.footer`
+  align-self: flex-start;
+`;
+
 const App = () => {
   const tempo = useSelector(getTempo);
   const dispatch = useDispatch();
@@ -103,14 +107,14 @@ const App = () => {
           <option value="2000">2 s (very slow)</option>
         </Select>
       </Tempo>
-      <footer>
+      <Footer>
         <small>
           <span>©Anna Vargova, </span
           ><a href="mailto:anna.vargova@seznam.cz?Subject=''"
           >anna.vargova@seznam.cz
           </a></small
         >
-      </footer>
+      </Footer>
     </Wrapper>
   );
 };
