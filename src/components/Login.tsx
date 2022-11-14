@@ -3,6 +3,8 @@ import {useState} from 'react';
 import styled from 'styled-components';
 import {getName, setLoginAction} from "../reducers/loginReducer"
 
+// not used at the moment - maybe login will be enabled in future
+
 const LoginSection = styled.div`
 margin-top: 40px;
 text-align: center;
