@@ -8,6 +8,9 @@ const Wrapper = styled.div`
   width: 100%;
   background: linear-gradient(45deg, #03a1fc, #e590e8);
   padding-bottom: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const Buttons = styled.div`
@@ -53,7 +56,7 @@ const Select = styled.select`
 const Instructions = styled.div`
   margin: 10px 20px 0 20px;
   text-align: center;
-  height: 20px;
+  max-width: 700px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
@@ -69,9 +72,9 @@ const App = () => {
     <Wrapper>
       <Header>Game of Life</Header>
       {/* <Login/> */}
-      <Instructions><span>I programmed this Game of Life as an exercise in React.js and Typescript. Explanation of this self-playing game can be found </span>
-        <a href='https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life' target='_blank' rel="noreferrer">here</a><span>. My code can be found </span><a href='https://github.com/AnickaVargova/Game-of-Life-TS' target='_blank' rel="noreferrer">here</a>
-        <span>. You can change the setting before or during the game by clicking on individual squares.</span></Instructions>
+      <Instructions><span>I programmed this Game of Life as an exercise in React.js. The explanation of this self-playing game can be found </span>
+        <a href='https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life' target='_blank' rel="noreferrer">here</a><span>. You can look at my code on </span><a href='https://github.com/AnickaVargova/Game-of-Life-TS' target='_blank' rel="noreferrer">Github</a>
+        <span>. The setting can be changed before or during the game by clicking on individual squares. You can also modify the speed by selecting one of the options below the board.</span></Instructions>
       <Board />
       <Buttons>
         <Button onClick={() => dispatch(startGame())}>Play</Button>

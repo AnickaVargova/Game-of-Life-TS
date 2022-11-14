@@ -7,7 +7,7 @@ import { getBoard} from "../reducers/gameReducer";
 const Table = styled.table`
   border: 1px solid black;
   margin: auto;
-  margin-top: 50px;
+  margin-top: 20px;
   padding: 0;
 `;
 
