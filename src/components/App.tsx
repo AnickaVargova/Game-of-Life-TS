@@ -1,6 +1,5 @@
 import Board from "./Board";
 import styled from "styled-components";
-import Login from "./Login";
 import { useSelector, useDispatch } from "react-redux";
 import { setTempoAction, setRunningAction, getTempo, resetAction, startGame } from "../reducers/gameReducer";
 
@@ -71,7 +70,7 @@ const App = () => {
       <Header>Game of Life</Header>
       {/* <Login/> */}
       <Instructions><span>I programmed this Game of Life as an exercise in React.js and Typescript. Explanation of this self-playing game can be found </span>
-        <a href='https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life' target='_blank'>here</a><span>. My code can be found </span><a href='https://github.com/AnickaVargova/Game-of-Life-TS' target='_blank'>here</a>
+        <a href='https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life' target='_blank' rel="noreferrer">here</a><span>. My code can be found </span><a href='https://github.com/AnickaVargova/Game-of-Life-TS' target='_blank' rel="noreferrer">here</a>
         <span>. You can change the setting before or during the game by clicking on individual squares.</span></Instructions>
       <Board />
       <Buttons>
